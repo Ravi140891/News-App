@@ -1,7 +1,20 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
+import PropTypes from 'prop-types'
+
 
 export class News extends Component {
+  static defaultProps = {
+    country : 'in',
+    pageSize : 5,
+    category : 'general'
+  }
+
+  static propTypes = {
+    country : PropTypes.string,
+    pageSize : PropTypes.number,
+    category : PropTypes.string
+  }
   constructor() {
     super();
     this.state = {
@@ -12,7 +25,7 @@ export class News extends Component {
   }
 
   async componentDidMount(){
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4a0837a8483648d28909bfad317d695e&page=1&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4a0837a8483648d28909bfad317d695e&page=1&pageSize=${this.props.pageSize}`;
 
       let data = await fetch(url);
       let parsedData = await data.json();
@@ -20,7 +33,7 @@ export class News extends Component {
   }
 
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4a0837a8483648d28909bfad317d695e&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4a0837a8483648d28909bfad317d695e&page=${
       this.state.page - 1
     }&pageSize=${this.props.pageSize}`;
 
@@ -36,7 +49,7 @@ export class News extends Component {
 
     } else{
     let url =
-      `https://newsapi.org/v2/top-headlines?country=in&apiKey=4a0837a8483648d28909bfad317d695e&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+      `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4a0837a8483648d28909bfad317d695e&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
 
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -62,6 +75,9 @@ export class News extends Component {
                   }
                   imageUrl={elem.urlToImage}
                   newsUrl={elem.url}
+                  author = {elem.author}
+                  date = {elem.publishedAt}
+                  source = {elem.source.name}
                 />
               </div>
             );
